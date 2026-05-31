@@ -63,7 +63,7 @@ with aba_criar:
         botao_enviar = st.form_submit_button("Salvar Demanda")
         
         if botao_enviar:
-            from src.validacoes import validar_titulo_tarefa
+            from validacoes import validar_titulo_tarefa
             if not validar_titulo_tarefa(titulo):
                 st.error("Erro: O título da tarefa não pode estar vazio!")
             else:
@@ -148,7 +148,7 @@ with aba_gerenciar:
             st.info("Nenhuma demanda cadastrada para gerenciamento no momento.")
         else:
             # Exibe a tabela com os dados atuais do banco
-            st.dataframe(df, use_container_width=True, hide_index=True)
+            st.dataframe(df, width='stretch', hide_index=True)
             st.write("---")
             
             # Criando duas colunas na interface: uma para atualizar e outra para deletar
