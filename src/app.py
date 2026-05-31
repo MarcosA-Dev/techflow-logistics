@@ -35,3 +35,13 @@ try:
     conn.close()
 except Exception as e:
     st.error(f"Erro ao inicializar o banco de dados: {e}")
+
+# Criando as abas de navegação no painel do Streamlit
+aba_painel, aba_criar, aba_gerenciar = st.tabs([
+    "📊 Painel Kanban", 
+    "➕ Nova Demanda", 
+    "⚙️ Gerenciar Tarefas"
+])
+
+# Mensagem informativa de rodapé
+st.caption("TechFlow Logistics v1.0 - Sistema desenvolvido para controle de fluxo de transporte.")
