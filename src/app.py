@@ -29,7 +29,7 @@ try:
             descricao TEXT,
             status TEXT NOT NULL,
             responsavel TEXT,
-            prioridade TEXT DEFAULT 'Média'  <-- COLUNA NOVA DA MUDANÇA DE ESCOPO
+            prioridade TEXT DEFAULT 'Média'
         )
     """)
     conn.commit()
@@ -141,7 +141,7 @@ with aba_gerenciar:
     try:
         conn = conectar_banco()
         # Carrega os dados em um DataFrame do Pandas para exibição em tabela limpa
-        df = pd.read_sql_query("SELECT id, titulo, status, responsavel FROM tarefas", conn)
+        df = pd.read_sql_query("SELECT id, titulo, prioridade, status, responsavel FROM tarefas", conn)
         conn.close()
         
         if df.empty:
