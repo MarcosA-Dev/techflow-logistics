@@ -127,3 +127,62 @@ with aba_painel:
                         
     except Exception as e:
         st.error(f"Erro ao carregar o painel Kanban: {e}")
+
+# -------------------------------------------------------------------------
+# ABA 3: GERENCIAR TAREFAS (O "U" e "D" do CRUD - Update/Delete)
+# -------------------------------------------------------------------------
+with aba_gerenciar:
+    st.markdown("### Gerenciamento de Demandas Ativas")
+    
+    try:
+        conn = conectar_banco()
+        # Carrega os dados em um DataFrame do Pandas para exibição em tabela limpa
+        df = pd.read_sql_query("SELECT id, titulo, status, responsavel FROM tarefas", conn)
+        conn.close()
+        
+        if df.empty:
+            st.info("Nenhuma demanda cadastrada para gerenciamento no momento.")
+        else:
+            # Exibe a tabela com os dados atuais do banco
+            st.dataframe(df, use_container_width=True, hide_index=True)
+            st.write("---")
+            
+            # Criando duas colunas na interface: uma para atualizar e outra para deletar
+            col_atualizar, col_deletar = st.columns(2)
+            
+            with col_atualizar:
+                st.markdown("#### 🔄 Atualizar Status da Demanda")
+                id_atualizar = st.number_input("Digite o ID da demanda para alterar:", min_value=1, step=1, key="id_up")
+                novo_status = st.selectbox("Selecione o novo status:", ["A Fazer", "Em Progresso", "Concluído"])
+                
+                if st.button("Atualizar Status", type="primary"):
+                    conn = conectar_banco()
+                    cursor = conn.cursor()
+                    # Verifica se o ID realmente existe antes de atualizar
+                    cursor.execute("SELECT id FROM tarefas WHERE id = ?", (id_atualizar,))
+                    if cursor.fetchone() is None:
+                        st.error(f"Erro: O ID {id_atualizar} não foi encontrado no sistema.")
+                    else:
+                        cursor.execute("UPDATE tarefas SET status = ? WHERE id = ?", (novo_status, id_atualizar))
+                        conn.commit()
+                        st.success(f"Sucesso: Demanda ID {id_atualizar} movida para '{novo_status}'. Atualize a página.")
+                    conn.close()
+                    
+            with col_deletar:
+                st.markdown("#### ❌ Excluir Demanda do Sistema")
+                id_excluir = st.number_input("Digite o ID da demanda para deletar:", min_value=1, step=1, key="id_del")
+                
+                if st.button("Remover Registro", type="secondary"):
+                    conn = conectar_banco()
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT id FROM tarefas WHERE id = ?", (id_excluir,))
+                    if cursor.fetchone() is None:
+                        st.error(f"Erro: O ID {id_excluir} não foi encontrado no sistema.")
+                    else:
+                        cursor.execute("DELETE FROM tarefas WHERE id = ?", (id_excluir,))
+                        conn.commit()
+                        st.warning(f"Aviso: Demanda ID {id_excluir} foi removida com sucesso do sistema.")
+                    conn.close()
+                    
+    except Exception as e:
+        st.error(f"Erro ao carregar a área de gerenciamento: {e}")
