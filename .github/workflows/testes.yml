@@ -22,4 +22,5 @@ jobs:
 
     - name: Executar os testes automatizados com Pytest
       run: |
+        export PYTHONPATH=.
         pytest
