@@ -79,3 +79,51 @@ with aba_criar:
                     st.success(f"Sucesso: '{titulo}' foi adicionado à coluna A Fazer! Atualize a página.")
                 except Exception as e:
                     st.error(f"Erro ao salvar no banco de dados: {e}")
+
+
+# ABA 1: PAINEL KANBAN (Acompanhamento em Tempo Real)
+
+with aba_painel:
+    st.markdown("### Fluxo de Trabalho Atualizado")
+    
+    try:
+        # Buscar dados atualizados do banco de dados
+        conn = conectar_banco()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM tarefas")
+        todas_tarefas = cursor.fetchall()
+        conn.close()
+        
+        # Criar as 3 colunas visuais simulando o quadro Kanban
+        col_fazer, col_progresso, col_concluido = st.columns(3)
+        
+        with col_fazer:
+            st.error("📌 A FAZER")
+            st.write("---")
+            for t in todas_tarefas:
+                if t['status'] == 'A Fazer':
+                    # Usa o expander do Streamlit para criar um card retrátil
+                    with st.expander(f"📦 ID {t['id']}: {t['titulo']}"):
+                        st.write(f"**Responsável:** {t['responsavel']}")
+                        st.write(f"**Descrição:** {t['descricao']}")
+                        
+        with col_progresso:
+            st.warning("🚚 EM PROGRESSO")
+            st.write("---")
+            for t in todas_tarefas:
+                if t['status'] == 'Em Progresso':
+                    with st.expander(f"⚡ ID {t['id']}: {t['titulo']}"):
+                        st.write(f"**Responsável:** {t['responsavel']}")
+                        st.write(f"**Descrição:** {t['descricao']}")
+                        
+        with col_concluido:
+            st.success("✅ CONCLUÍDO")
+            st.write("---")
+            for t in todas_tarefas:
+                if t['status'] == 'Concluído':
+                    with st.expander(f"🏁 ID {t['id']}: {t['titulo']}"):
+                        st.write(f"**Responsável:** {t['responsavel']}")
+                        st.write(f"**Descrição:** {t['descricao']}")
+                        
+    except Exception as e:
+        st.error(f"Erro ao carregar o painel Kanban: {e}")
