@@ -1,104 +1,54 @@
-Aqui está o arquivo `README.md` completo e atualizado, com a seção de **Mudança de Escopo** incluída de forma clara para o professor ver. É só copiar o bloco inteiro abaixo e colar direto no seu arquivo:
+# TechFlow Logistics
 
-```markdown
-# 🚚 TechFlow Logistics
+Sistema de gerenciamento de demandas e fluxos logísticos baseado na metodologia Kanban. O projeto foi desenvolvido em Python utilizando Streamlit para a interface gráfica e SQLite para persistência estável de dados. O fluxo também conta com testes unitários automatizados integrados a uma esteira de Integração Contínua via GitHub Actions.
 
-Sistema dinâmico de gerenciamento de demandas e fluxos logísticos baseado na metodologia ágil Kanban. O projeto foi desenvolvido em Python utilizando **Streamlit** para a interface gráfica, **SQLite** para persistência estável de dados e **Pytest** para automação de testes unitários integrados a uma esteira de Integração Contínua (CI) via GitHub Actions.
+## Funcionalidades do Sistema
 
-## 📋 Funcionalidades (CRUD Completo)
+O sistema contempla as operações fundamentais para o controle de cargas e rotas:
 
-- **📊 Painel Kanban (Read):** Visualização dinâmica e em tempo real das demandas logísticas divididas em três colunas estruturadas (`A Fazer`, `Em Progresso` e `Concluído`) utilizando cards retráteis (`st.expander`).
-- **➕ Nova Demanda (Create):** Formulário seguro para cadastro de rotas, cargas e motoristas responsáveis, com validação de dados em tempo de execução.
-- **⚙️ Gerenciar Tarefas (Update & Delete):** Painel administrativo integrado com tabelas do Pandas para atualizar o status de movimentação dos cards ou realizar a exclusão definitiva de registros.
+* **Painel Kanban:** Visualização do fluxo de trabalho dividido em colunas para triagem de demandas em tempo real.
+* **Nova Demanda:** Formulário estruturado para cadastro de serviços, registrando título, descrição e o operador responsável.
+* **Gerenciar Tarefas:** Área administrativa para atualização de status dos registros cadastrados e remoção de demandas concluídas ou canceladas.
 
-## 🔄 Registro de Mudança de Escopo (Histórico de Adaptação)
+## Histórico de Alteração de Escopo
 
-Durante o ciclo de desenvolvimento do projeto, foi identificada a necessidade crítica de uma alteração de escopo pelo setor de operações logísticas:
+Durante o ciclo de desenvolvimento da aplicação, foi identificada a necessidade de mapear o nível de urgência dos serviços para otimizar a triagem da expedição. Como solução para essa demanda de negócios, o projeto passou por uma refatoração adaptativa para incorporar o conceito de Grau de Prioridade (dividido em Baixa, Média e Alta).
 
-* **Demanda de Mudança:** O sistema precisava de uma forma visual e estruturada para diferenciar a urgência das entregas, pois tratar todas as demandas com o mesmo peso gerava gargalos na expedição.
-* **Solução Implementada:** Foi realizada uma refatoração adaptativa no meio do projeto para incluir o conceito de **Grau de Prioridade** (`Baixa`, `Média`, `Alta`). Essa alteração exigiu a modificação dinâmica da estrutura da tabela no banco de dados SQLite, a inclusão de um campo de seleção (`st.selectbox`) no formulário de cadastro, e a renderização visual do nível de prioridade diretamente nos cards do painel Kanban e na tabela de gerenciamento.
+Essa modificação exigiu a reestruturação da tabela do banco de dados SQLite para suportar o novo atributo, além da atualização da interface gráfica com a inclusão de um campo de seleção no formulário de cadastro e a exibição correspondente da prioridade diretamente nos cartões informativos do painel Kanban.
 
-## 📐 Estrutura do Projeto
+## Estrutura de Diretórios
 
-O projeto segue as diretrizes recomendadas de Engenharia de Software, isolando o código de produção das rotinas de testes automatizados:
+O projeto adota uma divisão clara entre os arquivos de produção e as rotinas de validação:
 
 ```text
 techflow-logistics/
 ├── .github/
 │   └── workflows/
-│       └── testes.yml       # Configuração do GitHub Actions (CI)
+│       └── testes.yml       # Configuração da pipeline de CI
 ├── src/
-│   ├── app.py               # Interface Streamlit e Conexão SQLite
-│   └── validacoes.py        # Regras de negócio e validações puras
+│   ├── app.py               # Interface gráfica e banco de dados
+│   └── validacoes.py        # Funções lógicas de validação
 ├── tests/
-│   └── test_validacoes.py   # Testes unitários com Pytest
-├── .gitignore               # Proteção contra arquivos locais e binários
-└── requirements.txt         # Dependências do projeto
+│   └── test_validacoes.py   # Validações automatizadas
+├── .gitignore               # Restrições de arquivos locais
+└── requirements.txt         # Lista de dependências do Python
 
 ```
 
-## 🚀 Como Executar o Projeto Localmente
+## Instruções de Execução Local
 
-### 1. Clonar o Repositório
+Para rodar a aplicação em ambiente local, realize o clone do repositório e execute a instalação das dependências listadas no arquivo de requisitos:
 
 ```bash
-git clone [https://github.com/SEU_USUARIO/techflow-logistics.git](https://github.com/SEU_USUARIO/techflow-logistics.git)
+git clone https://github.com/SEU_USUARIO/techflow-logistics.git
 cd techflow-logistics
-
-```
-
-### 2. Configurar o Ambiente Virtual (Opcional, mas recomendado)
-
-```bash
-python -m venv venv
-# No Windows:
-venv\Scripts\activate
-# No Linux/macOS:
-source venv/bin/activate
-
-```
-
-### 3. Instalar as Dependências
-
-```bash
 pip install -r requirements.txt
 
 ```
 
-### 4. Executar a Aplicação Streamlit
-
-Certifique-se de estar na **raiz do projeto** (`techflow-logistics`) e execute o comando:
+Após concluir a instalação de todos os pacotes necessários, utilize o comando a seguir a partir da raiz do projeto para inicializar a interface do painel de logística no navegador:
 
 ```bash
 streamlit run src/app.py
-
-```
-
-O navegador abrirá automaticamente o endereço `http://localhost:8501`.
-
----
-
-## 🧪 Como Rodar os Testes Automatizados
-
-As regras de validação lógica do sistema foram blindadas contra falhas através de testes unitários. Para executá-los localmente, configure o `PYTHONPATH` na raiz do projeto e chame o Pytest:
-
-```bash
-# No Windows (PowerShell):
-$env:PYTHONPATH="."
-pytest
-
-# No Windows (CMD):
-set PYTHONPATH=.
-pytest
-
-# No Linux/macOS:
-export PYTHONPATH=.
-pytest
-
-```
-
-*Nota: Toda alteração enviada para o repositório principal dispara automaticamente a pipeline do **GitHub Actions**, que valida a integridade das funções na nuvem utilizando ambientes virtuais Ubuntu.*
-
-```
 
 ```
